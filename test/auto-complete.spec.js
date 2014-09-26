@@ -35,7 +35,8 @@ describe('autoComplete directive', function() {
             getTags: jasmine.createSpy().and.returnValue([]),
             getCurrentTagText: jasmine.createSpy(),
             getOptions: jasmine.createSpy().and.returnValue({
-                displayProperty: 'text'
+                displayProperty: 'text',
+                keyProperty: 'text'
             })
         };
 

@@ -10,6 +10,7 @@
  *
  * @param {string} ngModel Assignable angular expression to data-bind to.
  * @param {string=} [displayProperty=text] Property to be rendered as the tag label.
+ * @param {string=} [keyProperty=text] Property to uniquely identify tags.
  * @param {string=} [type=text] Type of the input element. Only 'text', 'email' and 'url' are supported values.
  * @param {number=} tabindex Tab order of the control.
  * @param {string=} [placeholder=Add a tag] Placeholder text for the control.
@@ -54,7 +55,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                    tagText.length >= options.minLength &&
                    tagText.length <= options.maxLength &&
                    options.allowedTagsPattern.test(tagText) &&
-                   !findInObjectArray(self.items, tag, options.displayProperty);
+                   !findInObjectArray(self.items, tag, options.keyProperty);
         };
 
         self.items = [];
@@ -143,6 +144,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                 minTags: [Number, 0],
                 maxTags: [Number, MAX_SAFE_INTEGER],
                 displayProperty: [String, 'text'],
+                keyProperty: [String, 'text'],
                 allowLeftoverText: [Boolean, false],
                 addFromAutocompleteOnly: [Boolean, false]
             });
@@ -234,7 +236,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
             };
 
             scope.track = function(tag) {
-                return tag[options.displayProperty];
+                return tag[options.keyProperty];
             };
 
             scope.newTagChange = function() {
@@ -242,7 +244,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
             };
 
             scope.$watch('tags', function(value) {
-                scope.tags = makeObjectArray(value, options.displayProperty);
+                scope.tags = makeObjectArray(value, options.keyProperty);
                 tagList.items = scope.tags;
             });
 

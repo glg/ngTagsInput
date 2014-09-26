@@ -11,6 +11,7 @@
  * @param {expression} source Expression to evaluate upon changing the input content. The input value is available as
  *                            $query. The result of the expression must be a promise that eventually resolves to an
  *                            array of strings.
+ * @param {string=} [displayProperty=text] Property to be rendered as the tag label.
  * @param {number=} [debounceDelay=100] Amount of time, in milliseconds, to wait before evaluating the expression in
  *                                      the source option after the last keystroke.
  * @param {number=} [minLength=3] Minimum number of characters that must be entered before evaluating the expression
@@ -32,7 +33,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, tagsInpu
 
         getDifference = function(array1, array2) {
             return array1.filter(function(item) {
-                return !findInObjectArray(array2, item, options.tagsInput.displayProperty);
+                return !findInObjectArray(array2, item, options.tagsInput.keyProperty);
             });
         };
 
@@ -64,7 +65,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, tagsInpu
                         return;
                     }
 
-                    items = makeObjectArray(items.data || items, options.tagsInput.displayProperty);
+                    items = makeObjectArray(items.data || items, options.tagsInput.keyProperty);
                     items = getDifference(items, tags);
                     self.items = items.slice(0, options.maxResultsToShow);
 
@@ -115,7 +116,8 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, tagsInpu
                 maxResultsToShow: [Number, 10],
                 loadOnDownArrow: [Boolean, false],
                 loadOnEmpty: [Boolean, false],
-                loadOnFocus: [Boolean, false]
+                loadOnFocus: [Boolean, false],
+                displayProperty: [String, 'text']
             });
 
             options = scope.options;
@@ -126,7 +128,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, tagsInpu
             suggestionList = new SuggestionList(scope.source, options);
 
             getItem = function(item) {
-                return item[options.tagsInput.displayProperty];
+                return item[options.displayProperty];
             };
 
             getDisplayText = function(item) {
@@ -167,7 +169,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, tagsInpu
             };
 
             scope.track = function(item) {
-                return getItem(item);
+                return item[options.tagsInput.keyProperty];
             };
 
             tagsInput
